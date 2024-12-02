@@ -1,0 +1,59 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*.local
+
+# Runtime data
+pids
+*.pid
+*.pid.lock
+
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Optional npm cache directory
+.npm
+
+# Debug output
+.vscode/
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE or Editor-specific files
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Logs from testing frameworks
+coverage/
+
+# Dependency directories
+/.pnp
+.pnp.js
+
+#screenshots
+screenshots/
