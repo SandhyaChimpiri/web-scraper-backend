@@ -11,11 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const CORS_ORIGIN=process.env.CORS_ORIGIN || "https://web-scraper-cyan-xi.vercel.app/"
 
-app.use(cors({
-  origin: CORS_ORIGIN,                 // to allow frontend URL
-  methods: ['GET', 'POST'],            // to allow methods you want (GET, POST, etc.)
-  allowedHeaders: ['Content-Type']     // to allow specific headers
-}));
+// app.use(cors({
+//   origin: CORS_ORIGIN,                 // to allow frontend URL
+//   methods: ['GET', 'POST'],            // to allow methods you want (GET, POST, etc.)
+//   allowedHeaders: ['Content-Type']     // to allow specific headers
+// }));
+
+app.use(cors({ origin: "*" }));
 
 //  screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
