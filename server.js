@@ -9,28 +9,24 @@ puppeteer.use(StealthPlugin());
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN=process.env.CORS_ORIGIN || "http://localhost:5173"
+const CORS_ORIGIN=process.env.CORS_ORIGIN || "https://web-scraper-cyan-xi.vercel.app/"
 
-// Enable CORS
 app.use(cors({
-  origin: CORS_ORIGIN,  // Allow your frontend URL
-  methods: ['GET', 'POST'],        // Allow methods you want (GET, POST, etc.)
-  allowedHeaders: ['Content-Type'] // Allow specific headers
+  origin: CORS_ORIGIN,                 // to allow frontend URL
+  methods: ['GET', 'POST'],            // to allow methods you want (GET, POST, etc.)
+  allowedHeaders: ['Content-Type']     // to allow specific headers
 }));
 
-// Serve screenshots directory
+//  screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
 
 if (!fs.existsSync(screenshotsDir)) {
-  fs.mkdirSync(screenshotsDir); // Create the screenshots directory if it doesn't exist
+  fs.mkdirSync(screenshotsDir);         // Create the screenshots directory if it doesn't exist
 }
 
 app.use("/screenshots", express.static(screenshotsDir));
 
 app.use(express.json());
-
-// app.post("/scrape", async (req, res) => {
-//   const { url } = req.body;
 
 app.post("/scrape", async (req, res) => {
   const { url } = req.body;
@@ -52,22 +48,21 @@ app.post("/scrape", async (req, res) => {
 
     await page.goto(url);
 
-    // Save the screenshot as a file
     const screenshotFilename = `screenshot_${Date.now()}.png`;
-    const screenshotPath = path.join(screenshotsDir, screenshotFilename);
+    const screenshotPath = path.join(screenshotsDir, screenshotFilename);      // saves screenshot as file
 
     await page.screenshot({ path: screenshotPath, fullPage: true });
 
     const data = await page.evaluate(() => {
-      // Extract links
+      // Scrape links
       const links = Array.from(document.querySelectorAll("a"))
         .map(a => ({
           href: a.href,
           text: a.innerText.trim(),
         }))
-        .filter(link => link.href && link.text); // Filter valid links
+        .filter(link => link.href && link.text);         // Filter valid links
 
-      // Extract contents
+      // Scrape contents
       const contentElements = Array.from(
         document.querySelectorAll("title, a, p, span, h1, h2, h3, h4, h5, h6")
       )
@@ -75,7 +70,7 @@ app.post("/scrape", async (req, res) => {
         .map((el) => el.innerText.trim());
       const uniqueContents = Array.from(new Set(contentElements));
 
-      // Extract images
+      // Scrape images
       const images = Array.from(document.querySelectorAll("img")).map((img) => ({
         src: img.src,
         alt: img.alt || "No description",
@@ -89,7 +84,7 @@ app.post("/scrape", async (req, res) => {
 
     res.json({
       data,
-      screenshot: `/screenshots/${screenshotFilename}`,
+      screenshot: `/screenshots/${screenshotFilename}`,       //results data and screenshot
     });
 
   } catch (error) {
