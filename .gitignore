@@ -57,3 +57,6 @@ coverage/
 
 #screenshots
 screenshots/
+
+#render dependencies
+.render-build.sh

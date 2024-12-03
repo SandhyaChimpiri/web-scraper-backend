@@ -4,6 +4,7 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const { executablePath } = require("puppeteer");
 require("dotenv").config();
 
 puppeteer.use(StealthPlugin());
@@ -53,15 +54,19 @@ app.post("/scrape", async (req, res) => {
     return res.status(400).json({ error: "Invalid URL format" });
   }
 
+  console.log('Executable Path:', executablePath());
+
+
   try {
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      ExecutablePath: process.env.CHROMIUM_PATH || executablePath()
     });
     const page = await browser.newPage();
   
     console.log(`Navigating to ${url}...`);
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 })
   
     const screenshotFilename = `screenshot_${Date.now()}.png`;
     const screenshotPath = path.join(screenshotsDir, screenshotFilename);
