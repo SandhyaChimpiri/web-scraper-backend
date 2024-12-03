@@ -1,7 +1,6 @@
 const express = require("express");
 const puppeteer = require("puppeteer-extra");
 const StealthPlugin = require("puppeteer-extra-plugin-stealth");
-const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const { executablePath } = require("puppeteer");
@@ -10,29 +9,31 @@ require("dotenv").config();
 puppeteer.use(StealthPlugin());
 
 const app = express();
-const CorsOrigin = process.env.CORS_ORIGIN || "https://web-scraper-frontend-eight.vercel.app/";
+const CorsOrigin = process.env.CORS_ORIGIN || "https://web-scraper-frontend-eight.vercel.app";
+
+const cors = require("cors");
 
 const allowedOrigins = [
-  CorsOrigin,                    // Deployed frontend URL
-  "http://localhost:5173"         // Local development URL
+  "http://localhost:5173", // Frontend in development
+  "https://web-scraper-frontend-eight.vercel.app", // Frontend in production
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    console.log("Origin:", origin);  // Check the origin of the request
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or CURL requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow the origin
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS")); // Block the origin
     }
   },
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type'],
-  credentials: true
-}));
+  methods: ["GET", "POST"], // Allow these HTTP methods
+  credentials: true, // Allow cookies or other credentials
+};
 
+app.use(cors(corsOptions));
 
-app.options("*", cors());  // Handle preflight requests
 
 // Screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
