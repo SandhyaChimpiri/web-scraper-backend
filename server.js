@@ -10,7 +10,6 @@ require("dotenv").config();
 puppeteer.use(StealthPlugin());
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 const CorsOrigin = process.env.CORS_ORIGIN || "https://web-scraper-frontend-eight.vercel.app/";
 
 const allowedOrigins = [
@@ -93,5 +92,6 @@ app.post("/scrape", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(process.env.PORT || 5000, () => console.log(`Server running on port ${process.env.PORT || 5000}`));
+
 
