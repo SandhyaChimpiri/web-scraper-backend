@@ -20,7 +20,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: function (origin, callback) {
     console.log("Origin:", origin);  // Check the origin of the request
-    if (!origin || allowedOrigins.indexOf(origin) == -1) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -88,10 +88,11 @@ app.post("/scrape", async (req, res) => {
     await browser.close();
 
     res.json({ data, screenshot: `/screenshots/${screenshotFilename}` });
-  } catch (error) {
-    console.error("Scraping error:", error.stack || error.message);
-    res.status(500).json({ error: "Failed to scrape the page", details: error.message });
+  } catch (err) {
+    console.error(err);
+    setError(`Failed to scrape the page. Error: ${err.message}`);
   }
+  
 });
 
 app.listen(process.env.PORT || 5000, () => console.log(`Server running on port ${process.env.PORT || 5000}`));
