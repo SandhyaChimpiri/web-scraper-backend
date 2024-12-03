@@ -19,7 +19,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    console.log("Origin:", origin);
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {  // !origin allows Postman and server-to-server requests
       callback(null, true);
     } else {
