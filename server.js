@@ -11,27 +11,29 @@ puppeteer.use(StealthPlugin());
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN=process.env.CORS_ORIGIN || "https://web-scraper-frontend-iota.vercel.app/"
 
-const allowedOrigins = [
-  CORS_ORIGIN,                    // Deployed frontend URL
-  "http://localhost:5173"         // Local development URL  
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    console.log(origin);
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {  // !origin allows Postman and server-to-server requests
-      callback(null, true);
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      process.env.CORS_ORIGIN || "https://web-scraper-frontend-bzus8thci-web-scraper.vercel.app",
+      "http://localhost:5173"
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Allow requests from allowed origins or no-origin requests
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.error(`Blocked by CORS: ${origin}`);
+      callback(new Error("Not allowed by CORS"));
     }
-  },                                   // to allow frontend URL
-  methods: ['GET', 'POST'],            // to allow methods you want (GET, POST, etc.)
-  allowedHeaders: ['Content-Type']     // to allow specific headers
-}));
+  },
+  methods: ["GET", "POST", "OPTIONS"], // Allowed HTTP methods
+  allowedHeaders: ["Content-Type"], // Allowed HTTP headers
+  credentials: true, // If cookies/auth tokens need to be shared
+};
 
-app.options("*", cors());  // Handle preflight requests
+app.use(cors(corsOptions));
+
+// Automatically handle preflight requests
+app.options("*", cors(corsOptions));
 
 //  screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
@@ -53,21 +55,28 @@ app.post("/scrape", async (req, res) => {
   if (!/^https?:\/\/[^\s/$.?#].[^\s]*$/.test(url)) {
     return res.status(400).json({ error: "Invalid URL format" });
   }
-
   console.log('Executable Path:', executablePath());
-
 
   try {
     const browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-      ExecutablePath: process.env.CHROMIUM_PATH || executablePath()
+      args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--no-zygote',
+    '--single-process',
+  ],
+      executablePath: process.env.CHROMIUM_PATH || executablePath()
     });
     const page = await browser.newPage();
   
     console.log(`Navigating to ${url}...`);
-    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 })
-  
+    await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 }) // 30 seconds
+    .catch(err => {
+     throw new Error(`Page took too long to load: ${err.message}`);
+     });
+
     const screenshotFilename = `screenshot_${Date.now()}.png`;
     const screenshotPath = path.join(screenshotsDir, screenshotFilename);
 
@@ -98,22 +107,27 @@ app.post("/scrape", async (req, res) => {
   
       return { links, contents: uniqueContents, images };
     });
-
-    await browser.close();
   
     res.json({
       data,
       screenshot: `/screenshots/${screenshotFilename}`,
     });
   } catch (error) {
+    console.error("Scraping failed:", error); // Logs detailed error to the console
     res.status(500).json({
       error: "Failed to scrape the page",
-      details: error.message,
+      details: error.message,  // Sends the error message to the client
     });
+  } 
+  finally {
+    if (browser) {
+      await browser.close();
+    } 
   }
-  
 });
 
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV || "development"} mode`);
+  console.log(`Listening at: http://localhost:${PORT}`);
+});
+
