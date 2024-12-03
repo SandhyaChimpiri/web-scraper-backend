@@ -12,14 +12,22 @@ puppeteer.use(StealthPlugin());
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const corsOptions = {
-  origin: "https://web-scraper-frontend-iota.vercel.app", // Replace with your deployed frontend URL
-  methods: ["GET", "POST", "OPTIONS"], // Allow necessary methods
-  allowedHeaders: ["Content-Type"], // Allow necessary headers
-  credentials: true, // Allow cookies or other credentials
-};
+const allowedOrigins = [
+  "https://web-scraper-frontend-iota.vercel.app" // Add your deployed frontend URL
+];
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'], // Allow specific methods
+  allowedHeaders: ['Content-Type'],   // Allow specific headers
+  credentials: true                   // Include cookies if needed
+}));
 
 //  screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
