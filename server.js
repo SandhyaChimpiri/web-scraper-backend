@@ -11,10 +11,10 @@ puppeteer.use(StealthPlugin());
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN;
+const CorsOrigin = process.env.CORS_ORIGIN || "https://web-scraper-frontend-eight.vercel.app/";
 
 const allowedOrigins = [
-  CORS_ORIGIN,                    // Deployed frontend URL
+  CorsOrigin,                    // Deployed frontend URL
   "http://localhost:5173"         // Local development URL
 ];
 
