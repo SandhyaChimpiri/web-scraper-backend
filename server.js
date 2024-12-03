@@ -11,7 +11,7 @@ puppeteer.use(StealthPlugin());
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN=process.env.CORS_ORIGIN || "https://web-scraper-cyan-xi.vercel.app/"
+const CORS_ORIGIN=process.env.CORS_ORIGIN || "https://web-scraper-frontend-iota.vercel.app/"
 
 const allowedOrigins = [
   CORS_ORIGIN,                    // Deployed frontend URL
