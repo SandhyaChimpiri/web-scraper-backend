@@ -13,27 +13,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    const allowedOrigins = [
-      process.env.CORS_ORIGIN || "https://web-scraper-frontend-bzus8thci-web-scraper.vercel.app",
-      "http://localhost:5173"
-    ];
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow requests from allowed origins or no-origin requests
-    } else {
-      console.error(`Blocked by CORS: ${origin}`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "OPTIONS"], // Allowed HTTP methods
-  allowedHeaders: ["Content-Type"], // Allowed HTTP headers
-  credentials: true, // If cookies/auth tokens need to be shared
+  origin: "https://web-scraper-frontend-iota.vercel.app", // Replace with your deployed frontend URL
+  methods: ["GET", "POST", "OPTIONS"], // Allow necessary methods
+  allowedHeaders: ["Content-Type"], // Allow necessary headers
+  credentials: true, // Allow cookies or other credentials
 };
 
 app.use(cors(corsOptions));
-
-// Automatically handle preflight requests
-app.options("*", cors(corsOptions));
 
 //  screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
