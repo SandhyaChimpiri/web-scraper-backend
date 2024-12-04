@@ -87,6 +87,10 @@ app.post("/scrape", async (req, res) => {
   
 });
 
-app.listen(process.env.PORT || 5000, () => console.log(`Server running on port ${process.env.PORT || 5000}`));
+const PORT = process.env.PORT || 5000; // Default to 5000 only if PORT is not set
+app.listen(PORT, () => {
+    console.log(`Server running on port: ${PORT}`);
+});
+
 
 
