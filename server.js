@@ -48,6 +48,7 @@ app.post("/scrape", async (req, res) => {
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
       executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser', 
     });
+    console.log("Puppeteer cache directory:", process.env.PUPPETEER_CACHE_DIR);
 
     const page = await browser.newPage();
     console.log(`Navigating to ${url}...`);
