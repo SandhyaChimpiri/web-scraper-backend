@@ -51,7 +51,7 @@ app.post("/scrape", async (req, res) => {
       executablePath: await chromium.executablePath,
       headless: chromium.headless,
     });
-
+    
     const page = await browser.newPage();
     console.log(`Navigating to ${url}...`);
 

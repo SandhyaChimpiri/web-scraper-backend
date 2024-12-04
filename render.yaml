@@ -3,7 +3,6 @@ services:
     name: web-scraper-backend
     env: node
     buildCommand: |
-      apt-get update && apt-get install -y chromium
-      npm install
+      apt-get update && apt-get install -y chromium-browser fonts-liberation
+      npm install --omit=dev
     startCommand: node server.js
-
