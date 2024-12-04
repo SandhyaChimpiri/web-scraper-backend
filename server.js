@@ -6,6 +6,7 @@ const fs = require("fs");
 require("dotenv").config();
 
 puppeteer.use(StealthPlugin());
+process.env.PUPPETEER_CACHE_DIR = '/opt/render/.cache/puppeteer';
 
 const app = express();
 const CorsOrigin = "https://web-scraper-frontend-eight.vercel.app";
@@ -44,8 +45,8 @@ app.post("/scrape", async (req, res) => {
     console.log("Launching Puppeteer...");
     browser = await puppeteer.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      executablePath: puppeteer.executablePath(), // Use Puppeteer's bundled Chromium
+      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
+      executablePath: process.env.CHROMIUM_PATH, 
     });
 
     const page = await browser.newPage();
