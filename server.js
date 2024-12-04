@@ -4,6 +4,8 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
+const chromium = require('chrome-aws-lambda');
+const puppeteer = require('puppeteer-core');
 
 puppeteer.use(StealthPlugin());
 process.env.PUPPETEER_CACHE_DIR = '/opt/render/.cache/puppeteer';
@@ -41,15 +43,11 @@ app.post("/scrape", async (req, res) => {
   if (!/^https?:\/\/[^\s/$.?#].[^\s]*$/.test(url)) {
     return res.status(400).json({ error: "Invalid URL format" });
   }
-
+  let browser;
   process.env.PUPPETEER_CACHE_DIR = "/opt/render/.cache/puppeteer";
   try {
     console.log("Launching Puppeteer...");
-
-    const chromium = require('chrome-aws-lambda');
-   const puppeteer = require('puppeteer-core');
-
-  const browser = await puppeteer.launch({
+  browser = await puppeteer.launch({
   args: chromium.args,
   defaultViewport: chromium.defaultViewport,
   executablePath: await chromium.executablePath,
