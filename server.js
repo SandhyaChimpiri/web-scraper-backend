@@ -13,27 +13,18 @@ const CorsOrigin = process.env.CORS_ORIGIN || "https://web-scraper-frontend-eigh
 
 const cors = require("cors");
 
-const allowedOrigins = [
-  "http://localhost:5173", // Frontend in development
-  "https://web-scraper-frontend-eight.vercel.app", // Frontend in production
-];
+// const allowedOrigins = [
+//   "http://localhost:5173", // Frontend in development
+//   CorsOrigin, // Frontend in production
+// ];
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or CURL requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow the origin
-    } else {
-      callback(new Error("Not allowed by CORS")); // Block the origin
-    }
-  },
+  origin: CorsOrigin,
   methods: ["GET", "POST"], // Allow these HTTP methods
   credentials: true, // Allow cookies or other credentials
 };
 
 app.use(cors(corsOptions));
-
 
 // Screenshots directory
 const screenshotsDir = path.join(__dirname, "screenshots");
@@ -61,7 +52,7 @@ app.post("/scrape", async (req, res) => {
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-      executablePath: process.env.CHROMIUM_PATH || executablePath(),
+      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser',
     });
 
     const page = await browser.newPage();
