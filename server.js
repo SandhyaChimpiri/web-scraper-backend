@@ -1,23 +1,20 @@
 const express = require("express");
-const puppeteer = require("puppeteer-extra");
-const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+const puppeteer = require("puppeteer-core");
+const chromium = require("chrome-aws-lambda");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
-const chromium = require('chrome-aws-lambda');
-const puppeteer = require('puppeteer-core');
+const cors = require("cors");
 
-puppeteer.use(StealthPlugin());
-process.env.PUPPETEER_CACHE_DIR = '/opt/render/.cache/puppeteer';
+// Set Puppeteer cache directory
+process.env.PUPPETEER_CACHE_DIR = "/opt/render/.cache/puppeteer";
 
 const app = express();
-//const CorsOrigin = "http://localhost:5173" || "https://web-scraper-frontend-eight.vercel.app";
 
-const CorsOrigin = process.env.NODE_ENV === 'production'
-? "https://web-scraper-frontend-eight.vercel.app"
-: "http://localhost:5173" ;
-
-const cors = require("cors");
+const CorsOrigin =
+  process.env.NODE_ENV === "production"
+    ? "https://web-scraper-frontend-eight.vercel.app"
+    : "http://localhost:5173";
 
 const corsOptions = {
   origin: CorsOrigin,
@@ -26,13 +23,14 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
+// Route to verify backend status
 app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
+// Scraping route
 app.post("/scrape", async (req, res) => {
   const { url } = req.body;
 
@@ -43,17 +41,16 @@ app.post("/scrape", async (req, res) => {
   if (!/^https?:\/\/[^\s/$.?#].[^\s]*$/.test(url)) {
     return res.status(400).json({ error: "Invalid URL format" });
   }
+
   let browser;
-  process.env.PUPPETEER_CACHE_DIR = "/opt/render/.cache/puppeteer";
   try {
     console.log("Launching Puppeteer...");
-  browser = await puppeteer.launch({
-  args: chromium.args,
-  defaultViewport: chromium.defaultViewport,
-  executablePath: await chromium.executablePath,
-  headless: chromium.headless,
-});
-
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+    });
 
     const page = await browser.newPage();
     console.log(`Navigating to ${url}...`);
@@ -64,18 +61,19 @@ app.post("/scrape", async (req, res) => {
     await page.setViewport({ width: 1366, height: 768 });
     await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
 
-    const screenshotsDir = path.join(__dirname, "screenshots"); // relative path in the server directory
-
+    // Handle screenshots directory
+    const screenshotsDir = path.join(__dirname, "screenshots");
     if (!fs.existsSync(screenshotsDir)) {
-    fs.mkdirSync(screenshotsDir);
+      fs.mkdirSync(screenshotsDir);
     }
     app.use("/screenshots", express.static(screenshotsDir));
 
-   const screenshotFilename = `screenshot_${Date.now()}.png`;
-   const screenshotPath = path.join(screenshotsDir, screenshotFilename);
+    // Take screenshot
+    const screenshotFilename = `screenshot_${Date.now()}.png`;
+    const screenshotPath = path.join(screenshotsDir, screenshotFilename);
+    await page.screenshot({ path: screenshotPath, fullPage: true });
 
-   await page.screenshot({ path: screenshotPath, fullPage: true });
-    
+    // Scrape data
     const data = await page.evaluate(() => {
       const links = Array.from(document.querySelectorAll("a"))
         .map((a) => ({ href: a.href, text: a.innerText.trim() }))
@@ -90,13 +88,13 @@ app.post("/scrape", async (req, res) => {
         alt: img.alt || "Image",
       }));
 
-      return { links, contents: [...new Set(contentElements)],images };
+      return { links, contents: [...new Set(contentElements)], images };
     });
 
     res.json({ data, screenshot: `/screenshots/${screenshotFilename}` });
   } catch (err) {
-    console.error("Scraping error:", err.message);
-    res.status(500).json({ error: `Failed to scrape the page. Error: ${err.message}` });
+    console.error("Scraping error:", err);
+    res.status(500).json({ error: `Failed to scrape the page: ${err.message}` });
   } finally {
     if (browser) {
       await browser.close();
@@ -104,6 +102,7 @@ app.post("/scrape", async (req, res) => {
   }
 });
 
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
