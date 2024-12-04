@@ -42,14 +42,20 @@ app.post("/scrape", async (req, res) => {
     return res.status(400).json({ error: "Invalid URL format" });
   }
 
-  let browser;
   process.env.PUPPETEER_CACHE_DIR = "/opt/render/.cache/puppeteer";
   try {
     console.log("Launching Puppeteer...");
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
-    });
+
+    const chromium = require('chrome-aws-lambda');
+   const puppeteer = require('puppeteer-core');
+
+  const browser = await puppeteer.launch({
+  args: chromium.args,
+  defaultViewport: chromium.defaultViewport,
+  executablePath: await chromium.executablePath,
+  headless: chromium.headless,
+});
+
 
     const page = await browser.newPage();
     console.log(`Navigating to ${url}...`);
