@@ -41,14 +41,37 @@ app.post("/scrape", async (req, res) => {
 
   try {
     console.log("Launching Puppeteer...");
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
-      executablePath: process.env.CHROMIUM_PATH || "/usr/bin/chromium-browser",
-    });
 
-    console.log("Navigating to:", url);
-    const page = await browser.newPage();
+   console.log("Launching Puppeteer...");
+
+try {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser',
+  });
+  console.log("Puppeteer launched successfully.");
+  const page = await browser.newPage();
+  try {
+    console.log(`Navigating to ${url}...`);
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 120000 });
+  } catch (err) {
+    console.error("Navigation error:", err);
+    res.status(500).json({ error: `Failed to navigate to the URL. Error: ${err.message}` });
+  }
+  
+  try {
+    const screenshotPath = path.join(screenshotsDir, screenshotFilename);
+    await page.screenshot({ path: screenshotPath, fullPage: true });
+  } catch (err) {
+    console.error("Screenshot error:", err);
+    res.status(500).json({ error: `Failed to take a screenshot. Error: ${err.message}` });
+  }
+  
+} catch (err) {
+  console.error("Failed to launch Puppeteer:", err);
+  res.status(500).json({ error: `Puppeteer launch failed. Error: ${err.message}` });
+}
     await page.setUserAgent(
       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     );
