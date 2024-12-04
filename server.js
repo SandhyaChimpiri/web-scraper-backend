@@ -43,11 +43,9 @@ app.post("/scrape", async (req, res) => {
   let browser;
   try {
     console.log("Launching Puppeteer...");
-    console.log('Chromium path:', process.env.CHROMIUM_PATH);
     browser = await puppeteer.launch({
       headless: true,
       args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage"],
-      executablePath: process.env.CHROMIUM_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe", 
     });
     console.log("Puppeteer cache directory:", process.env.PUPPETEER_CACHE_DIR);
 
