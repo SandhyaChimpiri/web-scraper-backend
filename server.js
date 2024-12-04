@@ -9,7 +9,11 @@ puppeteer.use(StealthPlugin());
 process.env.PUPPETEER_CACHE_DIR = '/opt/render/.cache/puppeteer';
 
 const app = express();
-const CorsOrigin = "http://localhost:5173" || "https://web-scraper-frontend-eight.vercel.app";
+//const CorsOrigin = "http://localhost:5173" || "https://web-scraper-frontend-eight.vercel.app";
+
+const CorsOrigin = process.env.NODE_ENV === 'production'
+? "https://web-scraper-frontend-eight.vercel.app"
+: "http://localhost:5173" ;
 
 const cors = require("cors");
 
@@ -88,7 +92,7 @@ app.post("/scrape", async (req, res) => {
     res.json({ data, screenshot: `/screenshots/${screenshotFilename}` });
   } catch (err) {
     console.error("Scraping error:", err.message);
-    res.status(500).json({ error: `Failed to scrape the page... Error: ${err.message}` });
+    res.status(500).json({ error: `Failed to scrape the page. Error: ${err.message}` });
   } finally {
     if (browser) {
       await browser.close();
