@@ -47,7 +47,7 @@ app.post("/scrape", async (req, res) => {
     const browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium-browser',
+      executablePath: '/usr/bin/chromium-browser',
     });
 
     const page = await browser.newPage();
