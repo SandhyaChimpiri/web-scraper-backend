@@ -9,14 +9,9 @@ require("dotenv").config();
 puppeteer.use(StealthPlugin());
 
 const app = express();
-const CorsOrigin = process.env.CORS_ORIGIN || "https://web-scraper-frontend-eight.vercel.app";
+const CorsOrigin ="https://web-scraper-frontend-eight.vercel.app/";
 
 const cors = require("cors");
-
-// const allowedOrigins = [
-//   "http://localhost:5173", // Frontend in development
-//   CorsOrigin, // Frontend in production
-// ];
 
 const corsOptions = {
   origin: CorsOrigin,
