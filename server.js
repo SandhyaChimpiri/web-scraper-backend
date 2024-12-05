@@ -49,7 +49,7 @@ app.post("/scrape", async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      args: chromium.args,
+    args: chromium.args,
     defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath(),
     headless: chromium.headless,
