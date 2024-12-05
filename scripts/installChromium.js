@@ -1,11 +1,19 @@
-const { execSync } = require("child_process");
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+const chromium = require('chrome-aws-lambda');
 
-console.log("Starting Chromium installation...");
+// Define the path for the Chromium binary
+const chromiumBinaryPath = path.join(__dirname, '..', 'node_modules', 'chrome-aws-lambda', 'bin', 'chromium.br');
 
-try {
-  execSync("npx puppeteer install", { stdio: "inherit" });
-  console.log("Chromium installed successfully.");
-} catch (error) {
-  console.error("Error installing Chromium:", error.message);
-  process.exit(1);
+// Check if the Chromium binary exists
+if (!fs.existsSync(chromiumBinaryPath)) {
+  console.log('Chromium binary not found, downloading...');
+  
+  // Download Chromium binary (if necessary, modify this based on your setup)
+  execSync('npx chrome-aws-lambda@latest install', { stdio: 'inherit' });
+  console.log('Chromium binary installed successfully.');
+} else {
+  console.log('Chromium binary already exists.');
 }
+

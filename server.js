@@ -49,7 +49,7 @@ app.post("/scrape", async (req, res) => {
 
   let browser;
   try {
-    const executablePath = await chromium.executablePath;
+    const executablePath = path.join(__dirname, 'node_modules', 'chrome-aws-lambda', 'bin', 'chromium.br');
     browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
@@ -91,6 +91,7 @@ app.post("/scrape", async (req, res) => {
 });
 
 // Start server
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
 
