@@ -52,7 +52,7 @@ app.post("/scrape", async (req, res) => {
   args: chromium.args,
   defaultViewport: chromium.defaultViewport,
   executablePath: process.env.NODE_ENV === "production"
-    ? chromium.executablePath // In production (Render) use chrome-aws-lambda's path
+    ? await chromium.executablePath // In production (Render) use chrome-aws-lambda's path
     : puppeteer.executablePath(), // In development, use the local Chromium
   headless: chromium.headless,
 });
