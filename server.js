@@ -1,5 +1,5 @@
 const express = require("express");
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-core");
 const chromium = require("chrome-aws-lambda");
 const path = require("path");
 const fs = require("fs");
@@ -50,8 +50,9 @@ app.post("/scrape", async (req, res) => {
   try {
     browser = await puppeteer.launch({
       args: chromium.args,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
     });
 
     const page = await browser.newPage();
