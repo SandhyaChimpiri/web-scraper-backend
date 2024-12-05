@@ -13,9 +13,10 @@
     "nodemon": "^3.1.7"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "postinstall": "puppeteer-core install",
-    "build": "npm install && npx puppeteer-core install"
-  }
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "postinstall": "npx puppeteer-core install",
+  "build": "npm install && npx puppeteer-core install"
+}
+
 }
