@@ -6,7 +6,7 @@ require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
-
+console.log(puppeteer.executablePath());
 const allowedOrigins = process.env.NODE_ENV === "production"
   ? ["https://web-scraper-frontend-eight.vercel.app"]          // Production frontend
   : ["http://localhost:5173"];                                 // Local frontend
@@ -49,6 +49,7 @@ app.post("/scrape", async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
+      executablePath: "C:/Users/Admin/.cache/puppeteer/chrome/win64-131.0.6778.87/chrome-win64/chrome.exe",
       headless: true,                                    // If false browser opens
       args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     });
