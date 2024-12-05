@@ -1,6 +1,5 @@
 const express = require("express");
-const puppeteer = require("puppeteer-core");
-const chromium = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
@@ -49,13 +48,9 @@ app.post("/scrape", async (req, res) => {
 
   let browser;
   try {
-    const executablePath = path.join(__dirname, 'node_modules', 'chrome-aws-lambda', 'bin', 'chromium.br');
     browser = await puppeteer.launch({
-    ignoreDefaultArgs: ['--disable-extensions'],
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: executablePath,
-    headless: chromium.headless,
+      headless: true,                                    // If false browser opens
+      args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     });
 
     const page = await browser.newPage();
