@@ -49,10 +49,11 @@ app.post("/scrape", async (req, res) => {
 
   let browser;
   try {
+    const executablePath = await chromium.executablePath;
     browser = await puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
-    executablePath: chromium.executablePath,
+    executablePath: executablePath,
     headless: chromium.headless,
     });
 
