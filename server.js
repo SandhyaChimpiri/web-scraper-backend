@@ -37,7 +37,7 @@ app.use("/screenshots", express.static(screenshotsDir));
 // Scraping route
 app.post("/scrape", async (req, res) => {
   const { url } = req.body;
-  
+
   if (!url) {
     return res.status(400).json({ error: "URL is required" });
   }
@@ -49,11 +49,14 @@ app.post("/scrape", async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
-      executablePath: await chromium.executablePath,
-      headless: chromium.headless,
-    });
+  args: chromium.args,
+  defaultViewport: chromium.defaultViewport,
+  executablePath: process.env.NODE_ENV === "production"
+    ? chromium.executablePath // In production (Render) use chrome-aws-lambda's path
+    : puppeteer.executablePath(), // In development, use the local Chromium
+  headless: chromium.headless,
+});
+console.log("Chromium executable path:", chromium.executablePath);
 
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
