@@ -51,6 +51,7 @@ app.post("/scrape", async (req, res) => {
   try {
     const executablePath = path.join(__dirname, 'node_modules', 'chrome-aws-lambda', 'bin', 'chromium.br');
     browser = await puppeteer.launch({
+    ignoreDefaultArgs: ['--disable-extensions'],
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
     executablePath: executablePath,
