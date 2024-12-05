@@ -9,7 +9,7 @@ const cors = require("cors");
 const app = express();
 
 const allowedOrigins = process.env.NODE_ENV === "production"
-  ? ["web-scraper-frontend-jw0gxco1q-web-scraper.vercel.app"] // Production frontend
+  ? ["https://web-scraper-frontend-eight.vercel.app"] // Production frontend
   : ["http://localhost:5173"]; // Local frontend
 
 const corsOptions = {
