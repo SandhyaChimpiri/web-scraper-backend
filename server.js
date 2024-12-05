@@ -51,9 +51,9 @@ app.post("/scrape", async (req, res) => {
     browser = await puppeteer.launch({
   args: chromium.args,
   defaultViewport: chromium.defaultViewport,
-  executablePath: process.env.NODE_ENV === 'production' 
-      ? await chromium.executablePath() // Path to Chromium in cloud environments
-      : puppeteer.executablePath(),      // Path to local Chromium in development
+  executablePath: process.env.NODE_ENV === "production"
+    ? await chromium.executablePath // In production (Render) use chrome-aws-lambda's path
+    : puppeteer.executablePath(), // In development, use the local Chromium
   headless: chromium.headless,
 });
 console.log("Chromium executable path:", chromium.executablePath);
