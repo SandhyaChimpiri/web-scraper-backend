@@ -85,7 +85,7 @@ console.log("Chromium executable path:", chromium.executablePath);
     res.json({ data, screenshot: `/screenshots/${screenshotFilename}` });
   } catch (err) {
     console.error("Scraping error:", err);
-    res.status(500).json({ error: `Failed to scrape the page: ${err.message}` });
+    res.status(500).json({ error: `Failed to scrape the page` });
   } finally {
     if (browser) await browser.close();
   }
