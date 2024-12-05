@@ -1,22 +1,22 @@
 {
   "dependencies": {
-    "body-parser": "^1.20.3",
-    "chrome-aws-lambda": "^10.1.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "puppeteer": "^23.10.0",
-    "puppeteer-core": "^10.4.0",
-    "puppeteer-extra": "^3.1.4",
-    "puppeteer-extra-plugin-stealth": "^2.9.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
-  },
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "postinstall": "puppeteer install",
-    "build": "npm install && npx puppeteer install"
-  }
+  "body-parser": "^1.20.3",
+  "chrome-aws-lambda": "^10.1.0",
+  "cors": "^2.8.5",
+  "dotenv": "^16.4.5",
+  "express": "^4.21.1",
+  "puppeteer-core": "^10.4.0",
+  "puppeteer-extra": "^3.1.4",
+  "puppeteer-extra-plugin-stealth": "^2.9.0"
+},
+"devDependencies": {
+  "nodemon": "^3.1.7"
+},
+"scripts": {
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "postinstall": "puppeteer-core install",
+  "build": "npm install && npx puppeteer-core install"
+}
+
 }
