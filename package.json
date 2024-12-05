@@ -11,11 +11,12 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
+    
   },
   "scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js",
-  "postinstall": "npm install puppeteer-core",
-  "build": "npm install && npm install puppeteer-core"
-}
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "postinstall": "npm install puppeteer-core",
+    "build": "npm install && npm install puppeteer-core"
+  }
 }
