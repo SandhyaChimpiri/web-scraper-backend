@@ -49,7 +49,7 @@ app.post("/scrape", async (req, res) => {
   let browser;
   try {
     browser = await puppeteer.launch({
-      executablePath: "C:/Users/Admin/.cache/puppeteer/chrome-headless-shell/win64-131.0.6778.87/chrome-headless-shell-win64/chrome-headless-shell.exe",
+      executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe",
       headless: true,                                    // If false browser opens
       args: ['--no-sandbox', '--disable-setuid-sandbox'] 
     });                                                    
