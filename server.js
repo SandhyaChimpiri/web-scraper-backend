@@ -20,11 +20,12 @@ const corsOptions = {
       callback(new Error(`CORS error: Origin ${origin} not allowed.`));
     }
   },
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 
 // Initialize screenshots directory
