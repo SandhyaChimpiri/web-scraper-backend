@@ -9,7 +9,7 @@ const cors = require("cors");
 const app = express();
 
 const allowedOrigins = process.env.NODE_ENV === "production"
-  ? ["https://web-scraper-frontend-eight.vercel.app"] // Production frontend
+  ? ["web-scraper-frontend-jw0gxco1q-web-scraper.vercel.app"] // Production frontend
   : ["http://localhost:5173"]; // Local frontend
 
 const corsOptions = {
@@ -90,7 +90,6 @@ console.log("Chromium executable path:", chromium.executablePath);
     if (browser) await browser.close();
   }
 });
-
 
 // Start server
 const PORT = process.env.PORT || 5000;
