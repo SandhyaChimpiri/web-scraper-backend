@@ -47,8 +47,17 @@ app.post("/scrape", async (req, res) => {
   }
 
      let browser;
+     
   try {
+    const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH ||
+    (process.env.NODE_ENV === 'production' ?
+      '/opt/render/.cache/puppeteer/chrome/linux-131.0.6778.87/chrome-linux64/chrome' : // Render (Linux)
+      'C:/Users/Admin/.cache/puppeteer/chrome/win64-131.0.6778.87/chrome-win64/chrome.exe' // Local (Windows)
+    );
+
+  console.log(`Using Chromium at: ${executablePath}`);
       browser = await puppeteer.launch({
+      executablePath: executablePath,
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });                                                    
