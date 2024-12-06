@@ -6,25 +6,24 @@ require("dotenv").config();
 const cors = require("cors");
 
 const app = express();
-console.log(puppeteer.executablePath());
+// console.log(puppeteer.executablePath());
+
 const allowedOrigins = process.env.NODE_ENV === "production"
   ? ["https://web-scraper-frontend-eight.vercel.app"]          // Production frontend
   : ["http://localhost:5173"];                                 // Local frontend
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS error: Origin ${origin} not allowed.`));
-    }
-  },
+  origin: allowedOrigins,
   methods: ["GET", "POST", "OPTIONS"],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+app.use((req, res, next) => {
+  console.log("Origin: ", req.get("Origin"));
+  next();
+});
 app.use(express.json());
 
 // Initialize screenshots directory
@@ -54,8 +53,8 @@ app.post("/scrape", async (req, res) => {
       '/opt/render/.cache/puppeteer/chrome/linux-131.0.6778.87/chrome-linux64/chrome' : // Render (Linux)
       'C:/Users/Admin/.cache/puppeteer/chrome/win64-131.0.6778.87/chrome-win64/chrome.exe' // Local (Windows)
     );
-
-  console.log(`Using Chromium at: ${executablePath}`);
+     
+  // console.log(`Using Chromium at: ${executablePath}`);
       browser = await puppeteer.launch({
       executablePath: executablePath,
       headless: true,
