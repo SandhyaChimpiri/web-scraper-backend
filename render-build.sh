@@ -1,23 +1,22 @@
 #!/bin/bash
-
-# Update package lists
+# Install Puppeteer dependencies
 apt-get update
-
-# Install necessary dependencies for Puppeteer
 apt-get install -y \
-  fonts-liberation \
-  libappindicator3-1 \
-  libatk-bridge2.0-0 \
-  libcups2 \
-  libxcomposite1 \
-  libxrandr2 \
-  libasound2 \
-  libgbm1 \
-  libnss3 \
-  libnspr4 \
-  xdg-utils
+    libnss3 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxrandr2 \
+    libasound2 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libglib2.0-0 \
+    libnspr4 \
+    libpango-1.0-0 \
+    libxshmfence1
 
-# Optional: Install Chromium if needed
-apt-get install -y chromium-browser
-
-echo "Render build setup complete."
