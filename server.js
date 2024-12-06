@@ -52,7 +52,8 @@ app.post("/scrape", async (req, res) => {
       puppeteer.executablePath() :                                                         // Render (Linux)
       'C:/Users/Admin/.cache/puppeteer/chrome/win64-131.0.6778.87/chrome-win64/chrome.exe' // Local (Windows)
     ) 
-  
+    console.log('Platform:', process.platform);
+
       browser = await puppeteer.launch({
       executablePath: executablePath,
       headless: true,
