@@ -48,11 +48,7 @@ app.post("/scrape", async (req, res) => {
 
      let browser;
   try {
-    const executablePath = puppeteer.executablePath();
-    console.log('Resolved Puppeteer Executable Path:', executablePath);
-  
       browser = await puppeteer.launch({
-      executablePath,
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });                                                    
