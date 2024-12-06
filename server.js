@@ -49,11 +49,10 @@ app.post("/scrape", async (req, res) => {
      
   try {
     const executablePath = (process.env.NODE_ENV === 'production' ?
-      '/opt/render/.cache/puppeteer/chrome/linux-131.0.6778.87/chrome-linux64/chrome' : // Render (Linux)
+      puppeteer.executablePath() :                                                         // Render (Linux)
       'C:/Users/Admin/.cache/puppeteer/chrome/win64-131.0.6778.87/chrome-win64/chrome.exe' // Local (Windows)
     ) 
-     
-  // console.log(`Using Chromium at: ${executablePath}`);
+
       browser = await puppeteer.launch({
       executablePath: executablePath,
       headless: true,
