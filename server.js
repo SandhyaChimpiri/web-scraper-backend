@@ -46,11 +46,12 @@ app.post("/scrape", async (req, res) => {
     return res.status(400).json({ error: "Invalid URL format" });
   }
 
+     let browser;
   try {
     const executablePath = puppeteer.executablePath();
     console.log('Resolved Puppeteer Executable Path:', executablePath);
   
-    const browser = await puppeteer.launch({
+      browser = await puppeteer.launch({
       executablePath,
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
